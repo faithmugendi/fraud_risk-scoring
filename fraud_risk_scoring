@@ -1,0 +1,25 @@
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("/content/drive/MyDrive/fraud_data.csv")
+
+# risk scoring logic
+def assign_risk(row):
+    if row['Amount'] > 200:
+        return 'High'
+    elif row['Amount'] > 100:
+        return 'Medium'
+    else:
+        return 'Low'
+
+# Apply risk scoring
+df['risk_level'] = df.apply(assign_risk, axis=1)
+
+# Fraud flag (1 = fraud, 0 = non-fraud)
+if 'Class' in df.columns:
+    df['fraud_flag'] = df['Class'].apply(lambda x: 'Fraud' if x == 1 else 'Non-Fraud')
+
+# Save processed data for Tableau
+df.to_csv("fraud_output.csv", index=False)
+
+print("Fraud analysis dataset created successfully.")
